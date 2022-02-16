@@ -16,8 +16,8 @@ app.get('/', (req, res) => {
     res.send('This is Server for SCIC Group Assinment.')
 })
 
-async function run(){
-    try{
+async function run() {
+    try {
         await client.connect();
         console.log('database connected');
         const database = client.db("Services");
@@ -29,13 +29,28 @@ async function run(){
             res.send(result);
         })
 
-        
+        // get my orders
+        app.get('/myorder/:email', async (req, res) => {
+            const email = req.params.email;
+            const result = await orderCollection.find({ email: email }).toArray();
+            res.send(result);
+        })
+
+        // delete order
+        app.delete('/deleteOrde/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query);
+            res.send(result);
+        })
+
+
     }
-    finally{
+    finally {
         // await client.close();
     }
 
-}run().catch(console.dir);
+} run().catch(console.dir);
 
 
 app.listen(port, () => {

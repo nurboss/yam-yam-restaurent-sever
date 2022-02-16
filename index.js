@@ -1,5 +1,6 @@
 const { MongoClient } = require('mongodb');
 const express = require('express');
+const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
@@ -26,6 +27,14 @@ async function run() {
         //Load API 
         app.get('/services', async (req, res) => {
             const result = await servicesCollection.find({}).toArray();
+            res.send(result);
+        })
+
+        //Load Single API 
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await servicesCollection.findOne(query);
             res.send(result);
         })
 
